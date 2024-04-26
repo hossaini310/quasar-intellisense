@@ -1,0 +1,50 @@
+{
+  "name": "quasar-intellisense",
+  "displayName": "Quasar IntelliSense",
+  "version": "1.0.0",
+  "description": "Quasar IntelliSense: Enhance Quasar development with CSS class autocompletion for efficient coding in Visual Studio Code.",
+  "categories": [
+    "Linters",
+    "Snippets"
+  ],
+  "keywords": [
+    "quasar",
+    "css",
+    "intellisense",
+    "autocomplete",
+    "vscode"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hossaini310/quasar-intellisense"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Hosain Hossaini"
+  },
+  "publisher": "hossaini",
+  "main": "./src/extension.js",
+  "scripts": {
+    "deploy": "vsce publish",
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "node ./src/test/runTest.js"
+  },
+  "activationEvents": [
+    "onLanguage:vue",
+    "onCompletion:class"
+  ],
+  "devDependencies": {
+    "@vscode/test-electron": "^2.2.2",
+    "eslint": "^8.33.0",
+    "glob": "^8.1.0",
+    "mocha": "^10.1.0"
+  },
+  "engines": {
+    "vscode": "^1.67.1"
+  },
+  "icon": "assets/icons/icon.png",
+  "sponsor": {
+    "url": "https://github.com/sponsors/hossaini310"
+  }
+}

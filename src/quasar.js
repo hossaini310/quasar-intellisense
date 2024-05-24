@@ -6,20 +6,16 @@ let statusBarItem = null;
 let cachedClasses = null;
 let cachedFileMtime = null;
 
-const setStatusBarItem = () => {
-  const rootPath = vscode.workspace.workspaceFolders;
-
-  console.log(rootPath[0].uri.fsPath);
+const setStatusBarItem = async () => {
+  const packageJsonPath = await vscode.workspace.findFiles('**/node_modules/quasar/package.json');
+  const packageJson = await JSON.parse(
+    fs.readFileSync(path.join(packageJsonPath[0].fsPath), 'utf8'),
+  );
 
   if (statusBarItem === null) {
     statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1);
   }
-  const packageJson = JSON.parse(
-    fs.readFileSync(
-      path.join(rootPath[0].uri.fsPath, 'node_modules', 'quasar', 'package.json'),
-      'utf8',
-    ),
-  );
+
   statusBarItem.text = `$(quasar-icon) Quasar v${packageJson.version
     .split('.')
     .slice(0, 2)
@@ -39,14 +35,14 @@ const extractCssClasses = (css) => {
   return Array.from(classes);
 };
 
-const getQuasarClasses = () => {
+const getQuasarClasses = async () => {
   const workspaceFolders = vscode.workspace.workspaceFolders;
   if (!workspaceFolders || workspaceFolders.length === 0) {
     return null; // No workspace is open
   }
 
-  const rootPath = workspaceFolders[0].uri.fsPath;
-  const quasarPath = path.resolve(rootPath, 'node_modules', 'quasar', 'dist', 'quasar.css');
+  const quasar = await vscode.workspace.findFiles('**/node_modules/quasar/dist/quasar.css');
+  const quasarPath = quasar[0].fsPath;
 
   try {
     if (fs.existsSync(quasarPath)) {

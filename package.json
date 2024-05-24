@@ -1,7 +1,7 @@
 {
   "name": "quasar-intellisense",
   "displayName": "Quasar IntelliSense",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Quasar IntelliSense: Enhance Quasar development with CSS class autocompletion for efficient coding in Visual Studio Code.",
   "categories": [
     "Linters",

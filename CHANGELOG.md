@@ -1,5 +1,9 @@
 # Change Log
 
+## v1.2.1 2024-05-24
+
+- 🐛 Minor bug fixes
+
 ## v1.2.0 2024-05-24
 
 - 🚀 Improved suggestion system: Quasar classes are now only suggested within class attributes.

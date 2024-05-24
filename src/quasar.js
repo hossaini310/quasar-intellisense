@@ -1,10 +1,32 @@
-const fs = require('fs');
 const path = require('path');
+const fs = require('fs');
+const vscode = require('vscode');
 
-const getQuasarClasses = () => {
-  const cssFilePath = path.join(__dirname, '..', 'assets', 'quasar.css');
-  const css = fs.readFileSync(cssFilePath, 'utf8');
-  return extractCssClasses(css);
+let statusBarItem = null;
+let cachedClasses = null;
+let cachedFileMtime = null;
+
+const setStatusBarItem = () => {
+  const rootPath = vscode.workspace.workspaceFolders;
+
+  console.log(rootPath[0].uri.fsPath);
+
+  if (statusBarItem === null) {
+    statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1);
+  }
+  const packageJson = JSON.parse(
+    fs.readFileSync(
+      path.join(rootPath[0].uri.fsPath, 'node_modules', 'quasar', 'package.json'),
+      'utf8',
+    ),
+  );
+  statusBarItem.text = `$(quasar-icon) Quasar v${packageJson.version
+    .split('.')
+    .slice(0, 2)
+    .join('.')}`;
+  statusBarItem.tooltip = 'Your current Quasar css version in this project';
+
+  statusBarItem.show();
 };
 
 const extractCssClasses = (css) => {
@@ -17,6 +39,42 @@ const extractCssClasses = (css) => {
   return Array.from(classes);
 };
 
+const getQuasarClasses = () => {
+  const workspaceFolders = vscode.workspace.workspaceFolders;
+  if (!workspaceFolders || workspaceFolders.length === 0) {
+    return null; // No workspace is open
+  }
+
+  const rootPath = workspaceFolders[0].uri.fsPath;
+  const quasarPath = path.resolve(rootPath, 'node_modules', 'quasar', 'dist', 'quasar.css');
+
+  try {
+    if (fs.existsSync(quasarPath)) {
+      const stats = fs.statSync(quasarPath);
+      const mtime = stats.mtime.getTime();
+
+      // If the file has not changed, return the cached value
+      if (cachedFileMtime === mtime) {
+        return cachedClasses;
+      }
+
+      // File has changed or is being loaded for the first time
+      const css = fs.readFileSync(quasarPath, 'utf8');
+      cachedClasses = extractCssClasses(css);
+      cachedFileMtime = mtime;
+
+      return cachedClasses;
+    } else {
+      vscode.window.showInformationMessage(`Quasar CSS file not found: ${quasarPath}`);
+      return null;
+    }
+  } catch (error) {
+    vscode.window.showInformationMessage(`Error reading Quasar CSS file: ${error}`);
+    return null;
+  }
+};
+
 module.exports = {
   getQuasarClasses,
+  setStatusBarItem,
 };

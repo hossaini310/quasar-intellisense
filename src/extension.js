@@ -1,25 +1,39 @@
 const vscode = require('vscode');
-const { getQuasarClasses } = require('./quasar');
+const { Position, Range } = vscode;
+const { getQuasarClasses, setStatusBarItem } = require('./quasar');
 
 const languageSupport = ['vue', 'vue-html'];
 
-function activate(context) {
+const activate = (context) => {
+  setStatusBarItem();
+  vscode.window.showInformationMessage(
+    '🎉Champion mode unlocked: Now, Quasar classes will be automatically suggested as you code! ',
+  );
+
+  const classRegex = /class(?:Name)?=["']([ -\w]*)(?!["'])$/;
+
   const disposable = vscode.languages.registerCompletionItemProvider(
     languageSupport,
     {
       async provideCompletionItems(document, position) {
-        const lineText = document.lineAt(position).text;
-        if (
-          lineText.lastIndexOf('class=', position.character) === -1 &&
-          lineText.lastIndexOf('className=', position.character) === -1
-        ) {
-          return undefined;
+        const lineUntilPos = document.getText(new Range(new Position(position.line, 0), position));
+        const matches = lineUntilPos.match(classRegex);
+        if (!matches) {
+          return null;
         }
+
         const classes = getQuasarClasses();
         const completionItems = [];
+
+        matches[1].split(' ').forEach((className) => {
+          const index = classes.indexOf(className);
+          if (index !== -1) {
+            classes.splice(index, 1);
+          }
+        });
+
         for (const className of classes) {
-          const completionItem = new vscode.CompletionItem();
-          completionItem.label = `${className} `;
+          const completionItem = new vscode.CompletionItem(className);
 
           completionItem.kind = vscode.CompletionItemKind.Class;
           completionItem.detail = 'Quasar IntelliSense';
@@ -34,13 +48,8 @@ function activate(context) {
     "'",
   );
   context.subscriptions.push(disposable);
-}
-
-function deactivate() {
-  clearCache();
-}
+};
 
 module.exports = {
   activate,
-  deactivate,
 };

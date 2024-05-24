@@ -1,7 +1,7 @@
 {
   "name": "quasar-intellisense",
   "displayName": "Quasar IntelliSense",
-  "version": "1.0.1",
+  "version": "1.2.0",
   "description": "Quasar IntelliSense: Enhance Quasar development with CSS class autocompletion for efficient coding in Visual Studio Code.",
   "categories": [
     "Linters",
@@ -29,6 +29,17 @@
     "lint": "eslint .",
     "pretest": "npm run lint",
     "test": "node ./src/test/runTest.js"
+  },
+  "contributes": {
+    "icons": {
+      "quasar-icon": {
+        "description": "Quasar Icon",
+        "default": {
+          "fontPath": "./assets/quasar-icon.woff",
+          "fontCharacter": "\\E900"
+        }
+      }
+    }
   },
   "activationEvents": [
     "onLanguage:vue",

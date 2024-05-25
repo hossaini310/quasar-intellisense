@@ -8,6 +8,11 @@ let cachedFileMtime = null;
 
 const setStatusBarItem = async () => {
   const packageJsonPath = await vscode.workspace.findFiles('**/node_modules/quasar/package.json');
+
+  if (!packageJsonPath[0]) {
+    return null;
+  }
+
   const packageJson = await JSON.parse(
     fs.readFileSync(path.join(packageJsonPath[0].fsPath), 'utf8'),
   );
@@ -42,6 +47,11 @@ const getQuasarClasses = async () => {
   }
 
   const quasar = await vscode.workspace.findFiles('**/node_modules/quasar/dist/quasar.css');
+  if (!quasar[0]) {
+    vscode.window.showWarningMessage('Quasar is not included in node_modules.');
+    return null;
+  }
+
   const quasarPath = quasar[0].fsPath;
 
   try {

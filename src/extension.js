@@ -4,8 +4,15 @@ const { getQuasarClasses, setStatusBarItem } = require('./quasar');
 
 const languageSupport = ['vue', 'vue-html'];
 
-const activate = (context) => {
+const activate = async (context) => {
   setStatusBarItem();
+
+  const quasarPath = await vscode.workspace.findFiles('**/node_modules/quasar/package.json');
+
+  if (!quasarPath[0]) {
+    return null;
+  }
+
   vscode.window.showInformationMessage(
     '🎉Champion mode unlocked: Now, Quasar classes will be automatically suggested as you code! ',
   );
@@ -22,7 +29,7 @@ const activate = (context) => {
           return null;
         }
 
-        const classes = getQuasarClasses();
+        const classes = await getQuasarClasses();
         const completionItems = [];
 
         matches[1].split(' ').forEach((className) => {

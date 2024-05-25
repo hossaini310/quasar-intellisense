@@ -1,5 +1,9 @@
 # Change Log
 
+## v1.2.2 2024-05-25
+
+- 🛠️ Show a warning if Quasar is not included in the project.
+
 ## v1.2.1 2024-05-24
 
 - 🐛 Minor bug fixes

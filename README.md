@@ -31,7 +31,7 @@ View complete CSS details for Quasar class names.
 
 Display the Quasar version used in the project.
 
-<img src="/assets/images/bootsrap-version.png"/>
+<img src="/assets/images/quasar-version.png"/>
 
 ## Known Issues
 

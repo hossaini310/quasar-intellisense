@@ -14,11 +14,24 @@ The extension will be activated automatically when it's installed.
 
 ## Features
 
-### Quasar CSS Class Autocomplete
+### Smart Autocomplete
 
-Quasar Intellisense is a Visual Studio Code extension that offers CSS class autocomplete for Quasar. Enter a class name and the extension will suggest matching CSS classes, if not than try ctrl + space to trigger the autocomplete.
+Intelligent suggestions for Quasar class names.
+Enter a class name and the extension will suggest matching CSS classes, if not than try `ctrl + space` to trigger the autocomplete.
 
-<img src="/assets/images/img1.png"/>
+<img src="/assets/images/autocomplete.png"/>
+
+### Detailed CSS Insights
+
+View complete CSS details for Quasar class names.
+
+<img src="/assets/images/css-details.png"/>
+
+### Quasar Version Detection
+
+Display the Quasar version used in the project.
+
+<img src="/assets/images/bootsrap-version.png"/>
 
 ## Known Issues
 

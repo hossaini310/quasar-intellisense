@@ -1,5 +1,13 @@
 # Change Log
 
+## v1.3.0 2024-05-27
+
+- ✨ Enhance feature: Now able to view complete CSS for class names.
+- ✨ Added support for suggesting CSS classes from CDN links as well.
+- ♻️ Refactor code for improved maintainability and readability.
+- 🛠️ Updated README file
+- 🐛 Fix minor bugs.
+
 ## v1.2.2 2024-05-25
 
 - 🛠️ Show a warning if Quasar is not included in the project.

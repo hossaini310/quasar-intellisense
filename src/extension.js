@@ -1,62 +1,57 @@
 const vscode = require('vscode');
-const { Position, Range } = vscode;
 const { getQuasarClasses, setStatusBarItem } = require('./quasar');
 
-const languageSupport = ['vue', 'vue-html'];
+const languageSupport = ['html', 'vue', 'vue-html'];
 
-const activate = async (context) => {
+const provideCompletionItems = (document, position) => {
+  const classRegex = /class(?:Name)?\s*=\s*['"]([^'"]*)$/;
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      const lineText = document.lineAt(position.line).text;
+      const textBeforeCursor = lineText.slice(0, position.character);
+
+      const matches = classRegex.exec(textBeforeCursor);
+      if (!matches || !matches[1]) {
+        resolve([]);
+        return;
+      }
+
+      const usedClasses = (matches[1] || '').split(' ').filter((cls) => cls.trim() !== '');
+      const availableClasses = (await getQuasarClasses()) || [];
+
+      const completionItems = availableClasses
+        .filter(({ className }) => !usedClasses.includes(className))
+        .map(({ className, classContent }) => {
+          const item = new vscode.CompletionItem(className, vscode.CompletionItemKind.Value);
+          item.detail = 'Quasar IntelliSense';
+          item.documentation = new vscode.MarkdownString().appendCodeblock(classContent, 'css');
+          item.insertText = className;
+          return item;
+        });
+
+      resolve(completionItems);
+    } catch (error) {
+      console.error('Error in provideCompletionItems:', error.message, error.stack);
+      reject([]);
+    }
+  });
+};
+
+const activate = (context) => {
   setStatusBarItem();
-
-  const quasarPath = await vscode.workspace.findFiles('**/node_modules/quasar/package.json');
-
-  if (!quasarPath[0]) {
-    return null;
-  }
-
-  vscode.window.showInformationMessage(
-    '🎉Champion mode unlocked: Now, Quasar classes will be automatically suggested as you code! ',
-  );
-
-  const classRegex = /class(?:Name)?=["']([ -\w]*)(?!["'])$/;
 
   const disposable = vscode.languages.registerCompletionItemProvider(
     languageSupport,
     {
-      async provideCompletionItems(document, position) {
-        const lineUntilPos = document.getText(new Range(new Position(position.line, 0), position));
-        const matches = lineUntilPos.match(classRegex);
-        if (!matches) {
-          return null;
-        }
-
-        const classes = await getQuasarClasses();
-        const completionItems = [];
-
-        matches[1].split(' ').forEach((className) => {
-          const index = classes.indexOf(className);
-          if (index !== -1) {
-            classes.splice(index, 1);
-          }
-        });
-
-        for (const className of classes) {
-          const completionItem = new vscode.CompletionItem(className);
-
-          completionItem.kind = vscode.CompletionItemKind.Class;
-          completionItem.detail = 'Quasar IntelliSense';
-
-          completionItems.push(completionItem);
-        }
-        return completionItems;
-      },
+      provideCompletionItems,
     },
     ' ',
     '"',
     "'",
   );
+
   context.subscriptions.push(disposable);
 };
 
-module.exports = {
-  activate,
-};
+module.exports = { activate };

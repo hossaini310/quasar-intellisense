@@ -1,5 +1,9 @@
 # Change Log
 
+## v1.3.3 2024-07-11
+
+- 🐛 Fix minor bugs.
+
 ## v1.3.2 2024-07-11
 
 - ♻️ Refactor code for improved maintainability and readability.

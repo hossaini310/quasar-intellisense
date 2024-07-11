@@ -23,7 +23,6 @@ const getQuasarVersionFromIndexHtml = async () => {
 
     return null;
   } catch (error) {
-    vscode.window.showWarningMessage(`Error finding Quasar version: ${error}`);
     return null;
   }
 };

@@ -1,5 +1,6 @@
 const vscode = require('vscode');
-const { getQuasarClasses, setStatusBarItem } = require('./quasar');
+const { getClasses } = require('./quasar');
+const { setStatusBarItem } = require('./statusBar');
 
 const languageSupport = ['html', 'vue', 'vue-html'];
 
@@ -18,14 +19,14 @@ const provideCompletionItems = (document, position) => {
       }
 
       const usedClasses = (matches[1] || '').split(' ').filter((cls) => cls.trim() !== '');
-      const availableClasses = (await getQuasarClasses()) || [];
+      const availableClasses = (await getClasses()) || [];
 
       const completionItems = availableClasses
         .filter(({ className }) => !usedClasses.includes(className))
-        .map(({ className, classContent }) => {
+        .map(({ className, classProperties }) => {
           const item = new vscode.CompletionItem(className, vscode.CompletionItemKind.Value);
           item.detail = 'Quasar IntelliSense';
-          item.documentation = new vscode.MarkdownString().appendCodeblock(classContent, 'css');
+          item.documentation = new vscode.MarkdownString().appendCodeblock(classProperties, 'css');
           item.insertText = className;
           return item;
         });

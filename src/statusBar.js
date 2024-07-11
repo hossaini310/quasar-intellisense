@@ -33,7 +33,6 @@ const getQuasarVersionFromLocalCssFile = async () => {
     const packageJson = JSON.parse(fs.readFileSync(path.join(packageJsonPath[0].fsPath), 'utf8'));
     return packageJson.version;
   } catch (error) {
-    vscode.window.showWarningMessage(`Error finding Quasar version: ${error}`);
     return null;
   }
 };

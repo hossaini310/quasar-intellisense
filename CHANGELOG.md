@@ -1,5 +1,9 @@
 # Change Log
 
+## v1.3.4 2024-07-12
+
+- 🐛 Fix minor bugs.
+
 ## v1.3.3 2024-07-11
 
 - 🐛 Fix minor bugs.
